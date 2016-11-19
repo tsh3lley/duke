@@ -19,6 +19,7 @@ router.get('/', function(req, res) {
 router.route('/ledger')
     //utility function to create the first ledger
     .put(function(req, res) {
+
         var ledger = new Ledger();  
         ledger.keys = paillier.generateKeys(1024);
 
@@ -106,7 +107,7 @@ router.route('/votes')
 
     .get(function(req, res) {
         res.render('vote');
-    })
+    });
 
 router.route('/votes/:ballot_id')
 
@@ -129,7 +130,7 @@ router.route('/votes/:ballot_id')
                 });
             });
         });
-    })
+    });
 
 // ELECTION ROUTES
 // =============================================================================
