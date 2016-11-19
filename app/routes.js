@@ -3,6 +3,7 @@ var router  = express.Router();
 var path    = require('path');
 var Ballot  = require('./models/ballot');
 var Ledger  = require('./models/ledger');
+var pallier = require('../jspaillier-master/paillier');
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -13,7 +14,8 @@ router.use(function(req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-    res.render('home', {message: 'it worked'}); 
+    var test = paillier.generateKeys(1024);
+    res.render('home', {message: test.pub.n.toString()}); 
 });
 
 router.route('/ledger')
@@ -21,7 +23,7 @@ router.route('/ledger')
     .put(function(req, res) {
 
         var ledger = new Ledger();  
-        ledger.keys = paillier.generateKeys(1024);
+        //ledger.keys = paillier.generateKeys(1024);
 
         ledger.save(function(err, ledger) {
             if (err)
@@ -87,12 +89,12 @@ router.route('/votes')
         ballot.vote3 = req.body.vote3;
         ballot.vote4 = req.body.vote4;
 
-        //ENCRYPT THE BALLOT HERE
+/*        //ENCRYPT THE BALLOT HERE
         var numBits = 1024;
         ballot.vote1 = keys.pub.encrypt(nbv(ballot.vote1));
         ballot.vote2 = keys.pub.encrypt(nbv(ballot.vote2));
         ballot.vote3 = keys.pub.encrypt(nbv(ballot.vote3));
-        ballot.vote4 = keys.pub.encrypt(nbv(ballot.vote4));
+        ballot.vote4 = keys.pub.encrypt(nbv(ballot.vote4));*/
 
         ballot.save(function(err, ballot) {
             if (err)
