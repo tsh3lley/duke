@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //validator
-app.use(validator);
+app.use(validator());
 
 //views
 app.set('views', './views')

@@ -19,7 +19,7 @@ router.get('/', function(req, res) {
 router.route('/ledger')
     //utility function to create the first ledger
     .put(function(req, res) {
-        var ledger = new Ledger();  
+        var ledger = new Ledger();
 
         ledger.save(function(err, ledger) {
             if (err)
@@ -100,7 +100,7 @@ router.route('/votes')
 
     .get(function(req, res) {
         res.render('vote');
-    })
+    });
 
 router.route('/votes/:ballot_id')
 
@@ -123,7 +123,7 @@ router.route('/votes/:ballot_id')
                 });
             });
         });
-    })
+    });
 
 // ELECTION ROUTES
 // =============================================================================
