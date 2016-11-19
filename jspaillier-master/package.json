@@ -1,0 +1,26 @@
+{
+  "name": "jspaillier-master",
+  "version": "1.0.0",
+  "description": "Princeton Hack",
+  "main": "paillier.js",
+  "dependencies": {
+    "mongodb": "^2.2.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thestateofmay/jspaillier.git"
+  },
+  "keywords": [
+    "yo"
+  ],
+  "author": "multiple",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thestateofmay/jspaillier/issues"
+  },
+  "homepage": "https://github.com/thestateofmay/jspaillier#readme"
+}
