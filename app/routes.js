@@ -1,8 +1,8 @@
 var express = require('express');
-var router = express.Router();
-var path = require('path');
-var Ballot     = require('./models/ballot');
-var Ledger     = require('./models/ledger');
+var router  = express.Router();
+var path    = require('path');
+var Ballot  = require('./models/ballot');
+var Ledger  = require('./models/ledger');
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -70,6 +70,14 @@ router.route('/votes')
 
     // create a ballot (accessed at POST http://localhost:8080/api/votes)
     .post(function(req, res) {
+        req.assert('ballot.phone', 'Invalid postparam').notEmpty().isInt();
+        req.assert('ballot.vote1', 'Invalid postparam').notEmpty().isInt();
+        req.assert('ballot.vote2', 'Invalid postparam').notEmpty().isInt();
+        req.assert('ballot.vote3', 'Invalid postparam').notEmpty().isInt();
+        req.assert('ballot.vote4', 'Invalid postparam').notEmpty().isInt();
+
+        console.log(ballot);
+
         var ballot = new Ballot();  
         ballot.phone = req.body.phone; 
         ballot.vote1 = req.body.vote1;
