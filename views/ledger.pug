@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	div.container
+	div.jumbotron
+		h1.title=Ledger
+		h1.title='Ledger'
+		table
+			tbody
+				each vote in ledger[0].votes
+					tr
+						td 
+							h3.title=vote
