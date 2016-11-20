@@ -14,8 +14,8 @@ router.use(function(req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-    var test = paillier.generateKeys(1024);
-    res.render('home', {message: test.pub.n.toString()}); 
+    //var test = paillier.generateKeys(1024);
+    res.render('home', {message: test}); 
 });
 
 router.route('/ledger')

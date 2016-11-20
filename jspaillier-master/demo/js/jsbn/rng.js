@@ -73,3 +73,5 @@ function rng_get_bytes(ba) {
 function SecureRandom() {}
 
 SecureRandom.prototype.nextBytes = rng_get_bytes;
+
+module.exports = rng;
