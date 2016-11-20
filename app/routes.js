@@ -34,13 +34,15 @@ router.route('/ledger')
         });
     })
 
+router.route('/ledger/:ledger_id')
     //post a ballot to the ledger
     .post(function(req, res) {
         Ballot.findById(req.body.ballot_id, function(err, ballot) {
             if (err)
                 res.send(err);
 
-            Ledger.findById('582d1bb3e87fbb115b000001', function(err, ledger) {
+            Ledger.findById(req.params.ledger_id, function(err, ledger) {
+                //582d1bb3e87fbb115b000001
                 if (err)
                     res.send(err);
 
@@ -57,11 +59,10 @@ router.route('/ledger')
 
     //get all ballots from the ledger
     .get(function(req, res) {
-        Ledger.find(function(err, ledger) {
+        Ledger.findById(req.params.ledger_id, function(err, ledger) {
             if (err)
                 res.send(err);
 
-            // res.json({ledger});
             res.render('ledger', {ledger});
         });
     });
@@ -69,7 +70,7 @@ router.route('/ledger')
 // VOTE ROUTES
 // =============================================================================
 
-router.route('/votes')
+router.route('/:ledger_id/votes')
 
     // create a ballot (accessed at POST http://localhost:8080/api/votes)
     .post(function(req, res) {
@@ -79,29 +80,32 @@ router.route('/votes')
         req.assert('ballot.vote3', 'Invalid postparam').notEmpty().isInt();
         req.assert('ballot.vote4', 'Invalid postparam').notEmpty().isInt();
 
-        console.log(ballot);
+        Ledger.findById(findById(req.params.ledger_id, function(err, ledger) {
+            console.log(ballot);
+            var key = ledger.key;
 
-        var ballot = new Ballot();  
-        ballot.phone = req.body.phone; 
-        ballot.vote1 = req.body.vote1;
-        ballot.vote2 = req.body.vote2;
-        ballot.vote3 = req.body.vote3;
-        ballot.vote4 = req.body.vote4;
+            var ballot = new Ballot();  
+            ballot.phone = req.body.phone; 
+            ballot.vote1 = req.body.vote1;
+            ballot.vote2 = req.body.vote2;
+            ballot.vote3 = req.body.vote3;
+            ballot.vote4 = req.body.vote4;
 
-/*        //ENCRYPT THE BALLOT HERE
-        var numBits = 1024;
-        ballot.vote1 = keys.pub.encrypt(nbv(ballot.vote1));
-        ballot.vote2 = keys.pub.encrypt(nbv(ballot.vote2));
-        ballot.vote3 = keys.pub.encrypt(nbv(ballot.vote3));
-        ballot.vote4 = keys.pub.encrypt(nbv(ballot.vote4));*/
+    /*        //ENCRYPT THE BALLOT HERE
+            var numBits = 1024;
+            ballot.vote1 = keys.pub.encrypt(nbv(ballot.vote1));
+            ballot.vote2 = keys.pub.encrypt(nbv(ballot.vote2));
+            ballot.vote3 = keys.pub.encrypt(nbv(ballot.vote3));
+            ballot.vote4 = keys.pub.encrypt(nbv(ballot.vote4));*/
 
-        ballot.save(function(err, ballot) {
-            if (err)
-                res.send(err);
+            ballot.save(function(err, ballot) {
+                if (err)
+                    res.send(err);
 
-            res.json({ 
-                message: 'Ballot created!',
-                id: ballot._id
+                res.json({ 
+                    message: 'Ballot created!',
+                    id: ballot._id
+                });
             });
         });
     })
@@ -110,24 +114,28 @@ router.route('/votes')
         res.render('vote');
     });
 
-router.route('/votes/:ballot_id')
+router.route('/:ledger_id/votes/:ballot_id')
 
     //audit a ballot
     .get(function(req, res) {
-        Ballot.findById(req.params.ballot_id, function(err, ballot) {
-            if (err)
-                res.send(err);
+        Ledger.findById(req.params.ledger_id, function(err, ledger) {
+            var key = ledger.key;
 
-            //DECRYPT THE BALLOT, DELETE IT, AND SEND WHAT WAS DECRYPTED
-            Ballot.remove({
-                _id: req.params.ballot_id
-            }, function(err, meme) {
+            Ballot.findById(req.params.ballot_id, function(err, ballot) {
                 if (err)
                     res.send(err);
 
-                res.json({
-                    message: 'Successfully deleted',
-                    decrypted: ballot
+                //DECRYPT THE BALLOT, DELETE IT, AND SEND WHAT WAS DECRYPTED
+                Ballot.remove({
+                    _id: req.params.ballot_id
+                }, function(err, meme) {
+                    if (err)
+                        res.send(err);
+
+                    res.json({
+                        message: 'Successfully deleted',
+                        decrypted: ballot
+                    });
                 });
             });
         });
@@ -136,11 +144,11 @@ router.route('/votes/:ballot_id')
 // ELECTION ROUTES
 // =============================================================================
 
-router.route('/election')
+router.route('/:ledger_id/election')
     
     //tally the election
     .get(function(req, res) {
-        Ledger.find(function(err, ballots) {
+        Ledger.findById(req.params.ledger_id, function(err, ballots) {
             if (err)
                 res.send(err);
 
