@@ -92,12 +92,11 @@ router.route('/:ledger_id/votes')
 
             console.log(ballot);
 
-    /*        //ENCRYPT THE BALLOT HERE
-            var numBits = 1024;
-            ballot.vote1 = keys.pub.encrypt(nbv(ballot.vote1));
-            ballot.vote2 = keys.pub.encrypt(nbv(ballot.vote2));
-            ballot.vote3 = keys.pub.encrypt(nbv(ballot.vote3));
-            ballot.vote4 = keys.pub.encrypt(nbv(ballot.vote4));*/
+            //ENCRYPT THE BALLOT HERE
+            ballot.hillary = keys.pub.encrypt(nbv(ballot.vote1));
+            ballot.gary = keys.pub.encrypt(nbv(ballot.vote2));
+            ballot.jill = keys.pub.encrypt(nbv(ballot.vote3));
+            ballot.donald = keys.pub.encrypt(nbv(ballot.vote4));
 
             ballot.save(function(err, ballot) {
                 if (err)
@@ -177,8 +176,18 @@ router.route('/:ledger_id/election')
                 jill.push(vote.jill);
                 donald.push(vote.donald);
             });
-            console.log(hillary);
-            console.log(donald);
+
+
+            var hillaryResult = ledger.key.publicKey.add(hillary);
+            var garyResult = ledger.key.publicKey.add(gary);
+            var jillResult = ledger.key.publicKey.add(jill);
+            var donaldResult = ledger.key.publicKey.add(donald);
+
+            console.log(hillaryResult);
+            console.log(donaldResult);
+            console.log(hillaryResult);
+            console.log(donaldResult);
+
             res.json(ledger.votes);
         });
     });
