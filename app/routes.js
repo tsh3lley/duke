@@ -80,7 +80,7 @@ router.route('/:ledger_id/votes')
         req.assert('ballot.vote3', 'Invalid postparam').notEmpty().isInt();
         req.assert('ballot.vote4', 'Invalid postparam').notEmpty().isInt();
 
-        Ledger.findById(findById(req.params.ledger_id, function(err, ledger) {
+        Ledger.findById(req.params.ledger_id, function(err, ledger) {
             console.log(ballot);
             var key = ledger.key;
 
@@ -110,6 +110,7 @@ router.route('/:ledger_id/votes')
         });
     })
 
+    //render the page to cast a vote
     .get(function(req, res) {
         res.render('vote');
     });
