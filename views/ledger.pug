@@ -5,19 +5,15 @@ block content
 	div.jumbotron
 		h1.title=Ledger
 		h1.title='Ledger'
-		table
-			tbody
-				each vote in ledger.votes
-					tr
-						td 
-							h3.title=vote.phone
-		.row
-			.col-sm-4
-			.col-sm-2
-				|  1
-			.col-sm-2
-				|  2
-			.col-sm-2
-				|  3
-			.col-sm-2
-				|  4
+		each vote in ledger.votes
+			.row
+				.col-sm-4
+					h3.title = vote.phone
+				.col-sm-2
+					h3.title = vote.hillary
+				.col-sm-2
+					h3.title = vote.hillary
+				.col-sm-2
+					h3.title = vote.hillary
+				.col-sm-2
+					h3.title = vote.hillary

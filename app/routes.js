@@ -22,17 +22,22 @@ router.route('/ledger')
     .put(function(req, res) {
         //58311f4869de088c36000003
         var ledger = new Ledger();  
-        ledger.key = paillier.generateKeys(1024);
-        console.log(ledger.key);
+        var keyString = paillier.generateKeys(1024);
+/*        console.log(keyString);
+        var key = eval(keyString);
+        //var key = paillier.generateKeys(1024);
+        console.log(key);
+        var test = key.pub.encrypt(nbv(1));*/
+        res.json(keyString);
 
-        ledger.save(function(err, ledger) {
+        /*ledger.save(function(err, ledger) {
             if (err)
                 res.send(err);
 
             res.json({ 
                 ledger
             });
-        });
+        });*/
     })
 
 router.route('/ledger/:ledger_id')
