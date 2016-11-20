@@ -1,7 +1,7 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
-var BallotSchema   = new Schema({
+var BallotSchema = new Schema({
     phone: Number,
     vote1: String,
     vote2: String,
