@@ -59,7 +59,7 @@ router.route('/ledger/:ledger_id')
 
     //get all ballots from the ledger
     .get(function(req, res) {
-        Ledger.findById(req.params.ledger_id, function(err, ledger) {
+        Ledger.findById(req.params.ledger_id).populate('votes').exec(function(err, ledger) {
             if (err)
                 res.send(err);
 
@@ -74,6 +74,7 @@ router.route('/:ledger_id/votes')
 
     // create a ballot (accessed at POST http://localhost:8080/api/votes)
     .post(function(req, res) {
+        console.log(req.body);
         req.assert('ballot.phone', 'Invalid postparam').notEmpty().isInt();
         req.assert('ballot.hillary', 'Invalid postparam').notEmpty().isInt();
         req.assert('ballot.gary', 'Invalid postparam').notEmpty().isInt();
@@ -113,7 +114,7 @@ router.route('/:ledger_id/votes')
                     if (err)
                         res.send(err);
 
-                    res.json({ballot});
+                    res.redirect('/api/ledger/'+req.params.ledger_id);
                 });
             });
         });
@@ -169,7 +170,7 @@ router.route('/:ledger_id/election')
             var gary =[];
             var jill =[];
             var donald =[];
-            
+
             // load the votes into arrays
             ledger.votes.forEach(function(vote) {
                 hillary.push(vote.hillary);
