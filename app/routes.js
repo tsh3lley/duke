@@ -20,16 +20,17 @@ router.get('/', function(req, res) {
 router.route('/ledger')
     //utility function to create the first ledger
     .put(function(req, res) {
-
+        //58311f4869de088c36000003
         var ledger = new Ledger();  
-        //ledger.keys = paillier.generateKeys(1024);
+        ledger.key = paillier.generateKeys(1024);
+        console.log(ledger.key);
 
         ledger.save(function(err, ledger) {
             if (err)
                 res.send(err);
 
             res.json({ 
-                message: 'ledger created!',
+                ledger
             });
         });
     })
@@ -42,7 +43,6 @@ router.route('/ledger/:ledger_id')
                 res.send(err);
 
             Ledger.findById(req.params.ledger_id, function(err, ledger) {
-                //582d1bb3e87fbb115b000001
                 if (err)
                     res.send(err);
 
@@ -75,21 +75,22 @@ router.route('/:ledger_id/votes')
     // create a ballot (accessed at POST http://localhost:8080/api/votes)
     .post(function(req, res) {
         req.assert('ballot.phone', 'Invalid postparam').notEmpty().isInt();
-        req.assert('ballot.vote1', 'Invalid postparam').notEmpty().isInt();
-        req.assert('ballot.vote2', 'Invalid postparam').notEmpty().isInt();
-        req.assert('ballot.vote3', 'Invalid postparam').notEmpty().isInt();
-        req.assert('ballot.vote4', 'Invalid postparam').notEmpty().isInt();
+        req.assert('ballot.hillary', 'Invalid postparam').notEmpty().isInt();
+        req.assert('ballot.gary', 'Invalid postparam').notEmpty().isInt();
+        req.assert('ballot.jill', 'Invalid postparam').notEmpty().isInt();
+        req.assert('ballot.donald', 'Invalid postparam').notEmpty().isInt();
 
         Ledger.findById(req.params.ledger_id, function(err, ledger) {
-            console.log(ballot);
             var key = ledger.key;
 
             var ballot = new Ballot();  
             ballot.phone = req.body.phone; 
-            ballot.vote1 = req.body.vote1;
-            ballot.vote2 = req.body.vote2;
-            ballot.vote3 = req.body.vote3;
-            ballot.vote4 = req.body.vote4;
+            ballot.hillary = req.body.hillary;
+            ballot.gary = req.body.gary;
+            ballot.jill = req.body.jill;
+            ballot.donald = req.body.donald;
+
+            console.log(ballot);
 
     /*        //ENCRYPT THE BALLOT HERE
             var numBits = 1024;
@@ -102,9 +103,17 @@ router.route('/:ledger_id/votes')
                 if (err)
                     res.send(err);
 
-                res.json({ 
+                //immediately post to ledger for testing
+                /*res.json({ 
                     message: 'Ballot created!',
                     id: ballot._id
+                });*/
+                ledger.votes.push(ballot._id);
+                ledger.save(function(err) {
+                    if (err)
+                        res.send(err);
+
+                    res.json({ballot});
                 });
             });
         });
@@ -126,6 +135,8 @@ router.route('/:ledger_id/votes/:ballot_id')
                 if (err)
                     res.send(err);
 
+                res.json(ballot);
+
                 //DECRYPT THE BALLOT, DELETE IT, AND SEND WHAT WAS DECRYPTED
                 Ballot.remove({
                     _id: req.params.ballot_id
@@ -135,7 +146,8 @@ router.route('/:ledger_id/votes/:ballot_id')
 
                     res.json({
                         message: 'Successfully deleted',
-                        decrypted: ballot
+                        decrypted: ballot,
+                        test: meme
                     });
                 });
             });
@@ -149,12 +161,25 @@ router.route('/:ledger_id/election')
     
     //tally the election
     .get(function(req, res) {
-        Ledger.findById(req.params.ledger_id, function(err, ballots) {
+        Ledger.findById(req.params.ledger_id).populate('votes').exec(function(err, ledger) {
             if (err)
                 res.send(err);
 
-            //TALLY THE VOTES
-            res.json(ballots);
+            var hillary =[];
+            var gary =[];
+            var jill =[];
+            var donald =[];
+            
+            // load the votes into arrays
+            ledger.votes.forEach(function(vote) {
+                hillary.push(vote.hillary);
+                gary.push(vote.gary);
+                jill.push(vote.jill);
+                donald.push(vote.donald);
+            });
+            console.log(hillary);
+            console.log(donald);
+            res.json(ledger.votes);
         });
     });
 

@@ -6,7 +6,7 @@ var pug        = require('pug');
 var router     = require('./app/routes');
 var app        = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017'); // con to mongo
+mongoose.connect('mongodb://127.0.0.1:27017/duke'); // con to mongo
 
 // bodyparser used for POST
 app.use(bodyParser.urlencoded({ extended: true }));
